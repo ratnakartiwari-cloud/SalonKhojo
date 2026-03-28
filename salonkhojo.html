@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SalonKhojo – Find & Book Your Salon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf6f1;
+      --warm: #f5ede3;
+      --gold: #c9a96e;
+      --gold-dark: #a8844f;
+      --rose: #d4756b;
+      --rose-light: #f2bfba;
+      --ink: #1a1108;
+      --muted: #7a6a5a;
+      --card: #fffaf5;
+      --border: #e8ddd0;
+      --shadow: 0 8px 40px rgba(26,17,8,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(250,246,241,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 70px;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--gold); font-style: italic; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: 0.9rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold); color: #fff;
+      padding: 0.55rem 1.4rem; border-radius: 50px;
+      font-size: 0.88rem; font-weight: 600;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-dark); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #faf0e8 0%, #f5e8da 50%, #efe0d0 100%);
+      display: flex; align-items: center;
+      padding: 100px 5% 60px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(201,169,110,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(212,117,107,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-content { max-width: 560px; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(201,169,110,0.15);
+      border: 1px solid rgba(201,169,110,0.3);
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 0.8rem; color: var(--gold-dark); font-weight: 600;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero-badge::before { content: '✦'; }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      line-height: 1.1; color: var(--ink);
+      margin-bottom: 1.2rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 em { color: var(--gold); font-style: italic; }
+    .hero-sub {
+      font-size: 1.05rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 2.5rem;
+      font-weight: 300;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-search {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 6px 6px 6px 18px;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: var(--shadow);
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .hero-search input {
+      flex: 1; border: none; outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; color: var(--ink);
+      background: transparent;
+    }
+    .hero-search input::placeholder { color: #b8a89a; }
+    .hero-search button {
+      background: var(--gold); color: #fff;
+      border: none; border-radius: 12px;
+      padding: 0.75rem 1.6rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .hero-search button:hover { background: var(--gold-dark); }
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 2.5rem;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat { text-align: left; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; color: var(--ink); font-weight: 700;
+    }
+    .stat-label { font-size: 0.78rem; color: var(--muted); }
+    .hero-img {
+      position: absolute; right: 5%; top: 50%;
+      transform: translateY(-50%);
+      width: min(42%, 480px);
+      z-index: 1;
+      animation: fadeIn 1s 0.3s ease both;
+    }
+    .hero-img-inner {
+      width: 100%; aspect-ratio: 3/4;
+      background: linear-gradient(160deg, #e8d5c4 0%, #d4b99a 100%);
+      border-radius: 40px 40px 120px 40px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(26,17,8,0.18);
+    }
+    .hero-img-inner::after {
+      content: '✂️';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 5rem; opacity: 0.3;
+    }
+    .floating-card {
+      position: absolute; background: #fff;
+      border-radius: 16px; padding: 12px 18px;
+      box-shadow: 0 8px 30px rgba(26,17,8,0.12);
+      font-size: 0.82rem; white-space: nowrap;
+      animation: float 3s ease-in-out infinite;
+    }
+    .fc1 { bottom: 20%; left: -30px; animation-delay: 0s; }
+    .fc2 { top: 15%; right: -20px; animation-delay: 1.5s; }
+    .fc-icon { font-size: 1.2rem; }
+    .fc-text { color: var(--muted); }
+    .fc-bold { color: var(--ink); font-weight: 600; }
+
+    /* ── SECTIONS ── */
+    section { padding: 90px 5%; }
+    .section-label {
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 2px;
+      color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--ink);
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); font-size: 1rem; max-width: 500px; line-height: 1.7; }
+
+    /* ── HOW IT WORKS ── */
+    .how { background: var(--warm); }
+    .steps {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; margin-top: 3.5rem;
+    }
+    .step {
+      background: var(--card); border-radius: 20px;
+      padding: 2rem 1.8rem;
+      border: 1px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .step:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+    .step-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem; color: rgba(201,169,110,0.12);
+      font-weight: 700; position: absolute; top: 10px; right: 16px;
+      line-height: 1;
+    }
+    .step-icon {
+      font-size: 2rem; margin-bottom: 1rem;
+      background: rgba(201,169,110,0.15);
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── SALONS ── */
+    .salon-header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .view-all {
+      color: var(--gold); text-decoration: none;
+      font-size: 0.88rem; font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .salon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .salon-card {
+      background: var(--card); border-radius: 20px;
+      border: 1px solid var(--border);
+      overflow: hidden; cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .salon-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .salon-img {
+      width: 100%; height: 180px;
+      background: linear-gradient(135deg, #e8d0be, #c9a97a);
+      position: relative; display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .salon-img.s2 { background: linear-gradient(135deg, #d4c0be, #b89090); }
+    .salon-img.s3 { background: linear-gradient(135deg, #c0d0c4, #8aaa90); }
+    .salon-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--rose); color: #fff;
+      font-size: 0.7rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 50px;
+    }
+    .salon-fav {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,0.85);
+      border-radius: 50%; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; cursor: pointer;
+    }
+    .salon-info { padding: 1.2rem 1.4rem; }
+    .salon-name { font-weight: 600; font-size: 1rem; margin-bottom: 4px; }
+    .salon-loc { font-size: 0.82rem; color: var(--muted); margin-bottom: 8px; }
+    .salon-meta { display: flex; align-items: center; justify-content: space-between; }
+    .rating { font-size: 0.82rem; color: var(--gold-dark); font-weight: 600; }
+    .salon-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .tag {
+      background: rgba(201,169,110,0.12);
+      color: var(--gold-dark);
+      font-size: 0.72rem; font-weight: 500;
+      padding: 3px 10px; border-radius: 50px;
+    }
+    .book-btn {
+      width: 100%; margin-top: 1rem;
+      background: var(--gold); color: #fff; border: none;
+      padding: 0.65rem; border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .book-btn:hover { background: var(--gold-dark); }
+
+    /* ── SERVICES ── */
+    .services-section { background: var(--warm); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem; margin-top: 3rem;
+    }
+    .service-card {
+      background: var(--card); border-radius: 18px;
+      padding: 1.5rem 1.2rem; text-align: center;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .service-card:hover {
+      background: var(--gold); color: #fff;
+      border-color: var(--gold);
+      transform: scale(1.04);
+    }
+    .service-card:hover .service-label { color: #fff; }
+    .service-card:hover .service-price { color: rgba(255,255,255,0.8); }
+    .service-icon { font-size: 2.2rem; margin-bottom: 0.8rem; }
+    .service-label { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+    .service-price { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── BOOKING MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(26,17,8,0.55);
+      z-index: 200; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #fff; border-radius: 24px;
+      width: min(95%, 520px); max-height: 90vh;
+      overflow-y: auto; padding: 2.5rem;
+      position: relative; animation: popUp 0.3s ease;
+    }
+    .modal-close {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      background: var(--warm); border: none;
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem; margin-bottom: 0.3rem;
+    }
+    .modal-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.8rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-size: 0.82rem;
+      font-weight: 600; color: var(--ink); margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+      color: var(--ink); background: var(--cream);
+      outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--gold); }
+    .slot-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px; margin-top: 6px;
+    }
+    .slot {
+      border: 1.5px solid var(--border); border-radius: 10px;
+      padding: 8px 4px; text-align: center;
+      font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; color: var(--ink);
+      background: var(--cream);
+    }
+    .slot.booked {
+      background: #f0ece8; color: #b8a89a;
+      cursor: not-allowed; text-decoration: line-through;
+    }
+    .slot.selected {
+      background: var(--gold); color: #fff;
+      border-color: var(--gold);
+    }
+    .slot:not(.booked):hover {
+      border-color: var(--gold); color: var(--gold);
+    }
+    .form-submit {
+      width: 100%; background: var(--gold); color: #fff;
+      border: none; border-radius: 14px;
+      padding: 1rem; font-family: 'DM Sans', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer; margin-top: 1.5rem;
+      transition: background 0.2s;
+    }
+    .form-submit:hover { background: var(--gold-dark); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--ink); }
+    .testimonials .section-label { color: var(--gold); }
+    .testimonials .section-title { color: #fff; }
+    .testimonials .section-sub { color: rgba(255,255,255,0.5); }
+    .testi-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .testi-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 1.8rem;
+    }
+    .stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 0.8rem; }
+    .testi-text { color: rgba(255,255,255,0.8); font-size: 0.92rem; line-height: 1.7; margin-bottom: 1.2rem; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--rose));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #fff; font-size: 0.9rem;
+    }
+    .testi-name { font-size: 0.88rem; font-weight: 600; color: #fff; }
+    .testi-city { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+
+    /* ── APP CTA ── */
+    .app-cta {
+      background: linear-gradient(135deg, #f5ede3, #efe0d0);
+      text-align: center;
+    }
+    .app-cta .section-title { margin-bottom: 1rem; }
+    .app-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .app-btn {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--ink); color: #fff;
+      padding: 0.9rem 1.8rem; border-radius: 14px;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .app-btn:hover { background: #2d2010; }
+    .app-btn-icon { font-size: 1.6rem; }
+    .app-btn-text { text-align: left; }
+    .app-btn-sub { font-size: 0.7rem; opacity: 0.6; }
+    .app-btn-name { font-size: 0.95rem; font-weight: 600; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: rgba(255,255,255,0.5);
+      padding: 50px 5% 30px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2rem; margin-bottom: 3rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; color: #fff; margin-bottom: 0.8rem;
+    }
+    .footer-logo span { color: var(--gold); font-style: italic; }
+    .footer-desc { font-size: 0.85rem; line-height: 1.6; }
+    .footer-col h4 { color: #fff; font-size: 0.88rem; font-weight: 600; margin-bottom: 1rem; }
+    .footer-col a {
+      display: block; color: rgba(255,255,255,0.5);
+      text-decoration: none; font-size: 0.85rem; margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--gold); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.5rem;
+      display: flex; justify-content: space-between;
+      font-size: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    /* ── SUCCESS ── */
+    .success-msg {
+      display: none; text-align: center; padding: 1rem 0;
+    }
+    .success-icon { font-size: 3rem; margin-bottom: 0.8rem; }
+    .success-msg h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .success-msg p { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes popUp {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero { flex-direction: column; text-align: center; }
+      .hero-stats { justify-content: center; }
+      .hero-img { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .slot-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .slot-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Salon<span>Khojo</span></div>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#salons">Salons</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+  </ul>
+  <a class="nav-cta" href="#" onclick="openModal()">Book Now</a>
+  <div class="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">India's Trusted Salon Network</div>
+    <h1>Your Perfect<br><em>Salon</em> Awaits<br>Around the Corner</h1>
+    <p class="hero-sub">Discover top-rated salons near you, compare services, book slots instantly — and always look your best.</p>
+    <div class="hero-search">
+      <span>📍</span>
+      <input type="text" placeholder="Search salon, service, or locality..." />
+      <button onclick="openModal()">Find &amp; Book</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">2,400+</div>
+        <div class="stat-label">Salons Listed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98K+</div>
+        <div class="stat-label">Appointments</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4.8★</div>
+        <div class="stat-label">Avg Rating</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-img">
+    <div class="hero-img-inner">
+      <div class="floating-card fc1">
+        <div class="fc-icon">🗓️</div>
+        <div class="fc-bold">Slot Confirmed!</div>
+        <div class="fc-text">Tomorrow at 11:30 AM</div>
+      </div>
+      <div class="floating-card fc2">
+        <div class="fc-icon">⭐</div>
+        <div class="fc-bold">4.9 Rating</div>
+        <div class="fc-text">Glamour Studio, Delhi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-label">Simple Process</div>
+  <div class="section-title">Book in Under 2 Minutes</div>
+  <p class="section-sub">No phone calls. No waiting. Just pick your salon, choose your slot, and relax.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon">🔍</div>
+      <h3>Search Near You</h3>
+      <p>Enter your location or allow GPS access to see top-rated salons in your area instantly.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon">💆</div>
+      <h3>Choose a Service</h3>
+      <p>Browse haircuts, facials, threading, waxing, nail art and more — with live pricing.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon">🗓️</div>
+      <h3>Pick Your Slot</h3>
+      <p>See real-time availability. Pick any open slot that fits your schedule — any day, any time.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-icon">✅</div>
+      <h3>Confirm &amp; Relax</h3>
+      <p>Get instant confirmation via SMS/WhatsApp. Show up and enjoy your session, stress-free.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SALONS -->
+<section id="salons">
+  <div class="salon-header">
+    <div>
+      <div class="section-label">Featured Salons</div>
+      <div class="section-title">Top-Rated Near You</div>
+    </div>
+    <a href="#" class="view-all">View All →</a>
+  </div>
+  <div class="salon-grid">
+    <div class="salon-card">
+      <div class="salon-img">💇‍♀️
+        <div class="salon-badge">Open Now</div>
+        <div class="salon-fav">🤍</div>
+      </div>
+      <div class="salon-info">
+        <div class="salon-name">Glamour Studio</div>
+        <div class="salon-loc">📍 Connaught Place, Delhi</div>
+        <div class="salon-tags">
+          <span class="tag">Hair</span>
+          <span class="tag">Facial</span>
+          <span class="tag">Waxing</span>
+        </div>
+        <div class="salon-meta"><span class="rating">⭐ 4.9 (312 reviews)</span><span style="font-size:0.8rem;color:var(--muted)">from ₹299</span></div>
+        <button class="book-btn" onclick="openModal()">Book Slot</button>
+      </div>
+    </div>
+    <div class="salon-card">
+      <div class="salon-img s2">💅
+        <div class="salon-badge">Open Now</div>
+        <div class="salon-fav">🤍</div>
+      </div>
+      <div class="salon-info">
+        <div class="salon-name">Bella Beauty Lounge</div>
+        <div class="salon-loc">📍 Banjara Hills, Hyderabad</div>
+        <div class="salon-tags">
+          <span class="tag">Nails</span>
+          <span class="tag">Makeup</span>
+          <span class="tag">Bridal</span>
+        </div>
+        <div class="salon-meta"><span class="rating">⭐ 4.7 (198 reviews)</span><span style="font-size:0.8rem;color:var(--muted)">from ₹399</span></div>
+        <button class="book-btn" onclick="openModal()">Book Slot</button>
+      </div>
+    </div>
+    <div class="salon-card">
+      <div class="salon-img s3">✂️
+        <div class="salon-badge">2 Slots Left</div>
+        <div class="salon-fav">🤍</div>
+      </div>
+      <div class="salon-info">
+        <div class="salon-name">The Mane Story</div>
+        <div class="salon-loc">📍 Koramangala, Bengaluru</div>
+        <div class="salon-tags">
+          <span class="tag">Haircut</span>
+          <span class="tag">Color</span>
+          <span class="tag">Spa</span>
+        </div>
+        <div class="salon-meta"><span class="rating">⭐ 4.8 (441 reviews)</span><span style="font-size:0.8rem;color:var(--muted)">from ₹350</span></div>
+        <button class="book-btn" onclick="openModal()">Book Slot</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="section-label">What We Offer</div>
+  <div class="section-title">All Services, One Platform</div>
+  <p class="section-sub">From everyday grooming to special occasion prep — browse services and book instantly.</p>
+  <div class="services-grid">
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">💇‍♀️</div>
+      <div class="service-label">Haircut & Styling</div>
+      <div class="service-price">Starts ₹149</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">🌿</div>
+      <div class="service-label">Facial & Cleanup</div>
+      <div class="service-price">Starts ₹299</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">💅</div>
+      <div class="service-label">Nail Art & Manicure</div>
+      <div class="service-price">Starts ₹199</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">🧖</div>
+      <div class="service-label">Head Massage & Spa</div>
+      <div class="service-price">Starts ₹249</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">🎨</div>
+      <div class="service-label">Hair Coloring</div>
+      <div class="service-price">Starts ₹499</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">👰</div>
+      <div class="service-label">Bridal Makeup</div>
+      <div class="service-price">Starts ₹2,999</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">🧴</div>
+      <div class="service-label">Waxing & Threading</div>
+      <div class="service-price">Starts ₹99</div>
+    </div>
+    <div class="service-card" onclick="openModal()">
+      <div class="service-icon">✨</div>
+      <div class="service-label">Keratin & Smoothening</div>
+      <div class="service-price">Starts ₹1,499</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <div class="section-label">Customer Stories</div>
+  <div class="section-title">What Our Users Say</div>
+  <p class="section-sub">Real reviews from real customers who found their perfect salon on SalonKhojo.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"Booked a slot for a bridal facial 2 days before my wedding. It was seamless — the salon was exactly as described and the service was top-notch!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar">P</div>
+        <div><div class="testi-name">Priya Sharma</div><div class="testi-city">Delhi, NCR</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p class="testi-text">"No more calling and waiting on hold. I saw available slots, picked 11 AM on a Saturday, and showed up. Done. Brilliant app!"</p>
+      <div class="testi-author">
+        <div class="testi-avatar">R</div>
+        <div><div class="testi-name">Rahul Nair</div><div class="testi-city">Bengaluru</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★☆</div>
+      <p class="testi-text">"Found a hidden gem of a salon in my neighbourhood I never knew existed. The ratings and photos are really accurate — love this platform."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">A</div>
+        <div><div class="testi-name">Anjali Verma</div><div class="testi-city">Hyderabad</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP CTA -->
+<section class="app-cta">
+  <div class="section-label">Get the App</div>
+  <div class="section-title">Take SalonKhojo Everywhere</div>
+  <p class="section-sub" style="margin: 0 auto; text-align:center;">Real-time slot availability, instant confirmations, and exclusive app-only offers.</p>
+  <div class="app-btns">
+    <a class="app-btn" href="#">
+      <span class="app-btn-icon">🍎</span>
+      <div class="app-btn-text">
+        <div class="app-btn-sub">Download on the</div>
+        <div class="app-btn-name">App Store</div>
+      </div>
+    </a>
+    <a class="app-btn" href="#">
+      <span class="app-btn-icon">▶️</span>
+      <div class="app-btn-text">
+        <div class="app-btn-sub">Get it on</div>
+        <div class="app-btn-name">Google Play</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Salon<span>Khojo</span></div>
+      <p class="footer-desc">India's most trusted salon discovery and appointment booking platform. Find, compare, and book — in minutes.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Blog</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+    </div>
+    <div class="footer-col">
+      <h4>For Salons</h4>
+      <a href="#">List Your Salon</a>
+      <a href="#">Partner Dashboard</a>
+      <a href="#">Pricing</a>
+      <a href="#">Support</a>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <a href="#">FAQs</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 SalonKhojo. All rights reserved.</span>
+    <span>Made with ❤️ in India</span>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    
+    <div id="bookingForm">
+      <h2>Book Your Slot</h2>
+      <p class="modal-sub">Fill in the details below — takes less than a minute.</p>
+
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" placeholder="e.g. Priya Sharma" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" placeholder="+91 98765 43210" />
+      </div>
+      <div class="form-group">
+        <label>Select Service</label>
+        <select>
+          <option>Haircut & Styling — ₹149</option>
+          <option>Facial & Cleanup — ₹299</option>
+          <option>Nail Art & Manicure — ₹199</option>
+          <option>Head Massage & Spa — ₹249</option>
+          <option>Hair Coloring — ₹499</option>
+          <option>Bridal Makeup — ₹2,999</option>
+          <option>Waxing & Threading — ₹99</option>
+          <option>Keratin & Smoothening — ₹1,499</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Appointment Date</label>
+        <input type="date" />
+      </div>
+      <div class="form-group">
+        <label>Choose a Time Slot</label>
+        <div class="slot-grid">
+          <div class="slot booked">9:00 AM</div>
+          <div class="slot" onclick="selectSlot(this)">9:30 AM</div>
+          <div class="slot" onclick="selectSlot(this)">10:00 AM</div>
+          <div class="slot booked">10:30 AM</div>
+          <div class="slot" onclick="selectSlot(this)">11:00 AM</div>
+          <div class="slot" onclick="selectSlot(this)">11:30 AM</div>
+          <div class="slot booked">12:00 PM</div>
+          <div class="slot" onclick="selectSlot(this)">12:30 PM</div>
+          <div class="slot" onclick="selectSlot(this)">1:00 PM</div>
+          <div class="slot" onclick="selectSlot(this)">2:00 PM</div>
+          <div class="slot booked">3:00 PM</div>
+          <div class="slot" onclick="selectSlot(this)">4:00 PM</div>
+        </div>
+      </div>
+      <button class="form-submit" onclick="submitBooking()">Confirm Appointment ✓</button>
+    </div>
+
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">🎉</div>
+      <h3>Appointment Confirmed!</h3>
+      <p>We've sent details to your phone via SMS & WhatsApp.</p>
+      <p style="margin-top:0.5rem;color:var(--gold);font-weight:600;">See you at the salon!</p>
+      <button class="form-submit" style="margin-top:1.5rem" onclick="closeModal()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal() {
+    document.getElementById('bookingModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('bookingForm').style.display = 'block';
+    document.getElementById('successMsg').style.display = 'none';
+  }
+
+  function closeModal() {
+    document.getElementById('bookingModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function selectSlot(el) {
+    document.querySelectorAll('.slot.selected').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function submitBooking() {
+    document.getElementById('bookingForm').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  }
+
+  document.getElementById('bookingModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Set default date to tomorrow
+  const dateInput = document.querySelector('input[type="date"]');
+  if (dateInput) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.value = tomorrow.toISOString().split('T')[0];
+    dateInput.min = new Date().toISOString().split('T')[0];
+  }
+</script>
+</body>
+</html>
